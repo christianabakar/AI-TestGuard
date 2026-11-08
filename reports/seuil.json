@@ -1,0 +1,8 @@
+{
+  "modele": "logistic",
+  "seuil": 0.017720339522953817,
+  "regle": "fraude si probabilité >= seuil",
+  "choisi_sur": "validation",
+  "rappel_minimum": 0.8,
+  "fpr_maximum": 0.005
+}
