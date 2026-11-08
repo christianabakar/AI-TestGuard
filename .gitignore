@@ -1,0 +1,18 @@
+# Environnement virtuel
+.venv/
+
+# Fichiers temporaires Python
+__pycache__/
+*.pyc
+
+# Fichiers générés par les tests
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Données : jamais dans le dépôt
+data/*.csv
+
+# Modèles sauvegardés (régénérés par le pipeline)
+*.joblib
