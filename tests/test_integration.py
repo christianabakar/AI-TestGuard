@@ -3,8 +3,7 @@ import pandas as pd
 import pytest
 
 from app.preprocessing import FEATURE_COLUMNS
-from app.training import load_data, split_data
-
+from app.training import build_pipeline, load_data, split_data, train_model
 
 @pytest.fixture
 def dataset():
@@ -64,3 +63,42 @@ def test_decoupage_reproductible(dataset):
     second = split_data(dataset)
 
     assert list(premier[0].index) == list(second[0].index)
+
+
+
+# ---------- Entraînement et Pipeline ----------
+
+@pytest.mark.parametrize("nom", ["logistic", "tree"])
+def test_entrainement_produit_un_modele_utilisable(dataset, nom):
+    """Chaque modèle s'entraîne et prédit une probabilité par transaction."""
+    X_train, X_val, _, y_train, *_ = split_data(dataset)
+    modele = train_model(X_train, y_train, nom)
+    proba = modele.predict_proba(X_val)[:, 1]
+
+    assert proba.shape == (len(X_val),)
+    assert ((proba >= 0) & (proba <= 1)).all()
+
+
+def test_modele_inconnu_refuse():
+    """Un nom de modèle inconnu lève une erreur explicite qui liste les choix."""
+    with pytest.raises(ValueError, match="logistic"):
+        build_pipeline("random_forest")
+
+
+def test_scaler_du_pipeline_appris_sur_train_uniquement(dataset):
+    """T10 au niveau du Pipeline réel : le scaler interne n'a vu que l'entraînement."""
+    X_train, _, X_test, y_train, *_ = split_data(dataset)
+    modele = train_model(X_train, y_train, "logistic")
+    scaler = modele.named_steps["preprocessing"].named_transformers_["scale"]
+
+    assert scaler.mean_[1] == pytest.approx(X_train["Amount"].mean())
+    assert scaler.mean_[1] != pytest.approx(dataset["Amount"].mean())
+
+
+def test_entrainement_reproductible(dataset):
+    """T06 : deux entraînements identiques donnent exactement les mêmes probabilités."""
+    X_train, X_val, _, y_train, *_ = split_data(dataset)
+    p1 = train_model(X_train, y_train, "tree").predict_proba(X_val)
+    p2 = train_model(X_train, y_train, "tree").predict_proba(X_val)
+
+    np.testing.assert_array_equal(p1, p2)
