@@ -1,7 +1,17 @@
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 
-from app.preprocessing import FEATURE_COLUMNS, TARGET_COLUMN, validate_data
+from app.preprocessing import (
+    FEATURE_COLUMNS,
+    SCALED_COLUMNS,
+    TARGET_COLUMN,
+    validate_data,
+)
 
 RANDOM_STATE = 42
 
@@ -26,3 +36,25 @@ def split_data(df: pd.DataFrame):
         X_tmp, y_tmp, test_size=0.5, stratify=y_tmp, random_state=RANDOM_STATE
     )
     return X_train, X_val, X_test, y_train, y_val, y_test
+
+
+def build_pipeline(model_name: str) -> Pipeline:
+    """Assemble prétraitement + modèle dans une seule chaîne."""
+    scaler = ColumnTransformer(
+        [("scale", StandardScaler(), SCALED_COLUMNS)],
+        remainder="passthrough",  # V1 à V28 passent sans modification
+    )
+    models = {
+        "logistic": LogisticRegression(max_iter=1000, random_state=RANDOM_STATE),
+        "tree": DecisionTreeClassifier(max_depth=6, random_state=RANDOM_STATE),
+    }
+    if model_name not in models:
+        raise ValueError(f"Modèle inconnu : {model_name}. Choix : {list(models)}")
+    return Pipeline([("preprocessing", scaler), ("model", models[model_name])])
+
+
+def train_model(X_train: pd.DataFrame, y_train: pd.Series, model_name: str) -> Pipeline:
+    """Entraîne la chaîne complète, sur l'entraînement uniquement."""
+    pipeline = build_pipeline(model_name)
+    pipeline.fit(X_train, y_train)
+    return pipeline
