@@ -36,3 +36,34 @@ def bootstrap_ci(y_true, y_pred, metric, n_iter: int = 1000, seed: int = 42):
         idx = rng.integers(0, len(y_true), len(y_true))  # tirage avec remise
         scores.append(metric(y_true[idx], y_pred[idx]))
     return tuple(np.percentile(scores, [2.5, 97.5]))
+
+
+# ---------- Non-régression (Partie VI) ----------
+
+CRITERES_ACCEPTATION = {"recall_min": 0.80, "precision_min": 0.10, "fpr_max": 0.005}
+TOLERANCES = {"pr_auc": 0.02, "recall": 0.03, "precision": 0.05}
+
+
+def compare_to_baseline(baseline: dict, nouveau: dict):
+    """Compare une nouvelle version à la référence. Renvoie (décision, motifs)."""
+    # 1. Critères d'acceptation du plan de test : bloquants
+    motifs = []
+    if nouveau["recall"] < CRITERES_ACCEPTATION["recall_min"]:
+        motifs.append(f"rappel {nouveau['recall']:.3f} < {CRITERES_ACCEPTATION['recall_min']}")
+    if nouveau["precision"] < CRITERES_ACCEPTATION["precision_min"]:
+        motifs.append(f"précision {nouveau['precision']:.3f} < "
+                      f"{CRITERES_ACCEPTATION['precision_min']}")
+    if nouveau["fpr"] > CRITERES_ACCEPTATION["fpr_max"]:
+        motifs.append(f"FPR {nouveau['fpr']:.4f} > {CRITERES_ACCEPTATION['fpr_max']}")
+    if motifs:
+        return "REJETER", motifs
+
+    # 2. Tolérances de non-régression par rapport à la baseline
+    for metrique, tolerance in TOLERANCES.items():
+        delta = nouveau[metrique] - baseline[metrique]
+        if delta < -tolerance:
+            motifs.append(f"{metrique} : {delta:+.3f} (tolérance -{tolerance})")
+    if motifs:
+        return "INVESTIGUER", motifs
+
+    return "ACCEPTER", []
