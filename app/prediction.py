@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import joblib
@@ -6,12 +7,16 @@ import sklearn
 
 from app.preprocessing import validate_data
 
+logger = logging.getLogger(__name__)
+
 
 def predict_fraud(model, X: pd.DataFrame, threshold: float):
     """Renvoie (probabilités, classes). Règle : fraude si probabilité >= seuil."""
     X_valide = validate_data(X, require_target=False)
     proba = model.predict_proba(X_valide)[:, 1]
     classes = (proba >= threshold).astype(int)
+    logger.info("Prédiction : %d transaction(s), %d alerte(s), seuil %.5f",
+                len(classes), int(classes.sum()), threshold)
     return proba, classes
 
 
