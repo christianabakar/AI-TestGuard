@@ -54,7 +54,7 @@ chaine_complete = percentiles_ms(chronometrer(
 debits = {}
 for taille in [1, 100, 1_000, 10_000]:
     lot = X_test.iloc[:taille]
-    durees = chronometrer(lambda: predict_fraud(modele, lot, seuil), 20)
+    durees = chronometrer(lambda lot=lot: predict_fraud(modele, lot, seuil), 20)
     debits[taille] = float(taille / np.median(durees))
 
 memoire_pic = processus.memory_info().rss

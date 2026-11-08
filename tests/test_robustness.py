@@ -81,7 +81,7 @@ def test_ordre_des_lignes_sans_effet(modele, donnees):
 
 def test_sensibilite_bruit_faible(modele, donnees):
     """T17 : un bruit de 1 % de l'écart-type change au plus 1 % des classes."""
-    X, y = donnees
+    X, _ = donnees
     rng = np.random.default_rng(0)
     bruit = X.copy()
     bruit[V_COLS] += rng.normal(size=(len(X), 28)) * 0.01 * X[V_COLS].std().to_numpy()

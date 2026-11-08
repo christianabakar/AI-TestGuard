@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from app.prediction import load_pipeline, predict_fraud, save_pipeline
 from app.preprocessing import FEATURE_COLUMNS
 from app.training import build_pipeline, load_data, split_data, train_model
-from app.prediction import load_pipeline, predict_fraud, save_pipeline
+
 
 @pytest.fixture
 def dataset():
@@ -88,7 +89,7 @@ def test_modele_inconnu_refuse():
 
 def test_scaler_du_pipeline_appris_sur_train_uniquement(dataset):
     """T10 au niveau du Pipeline réel : le scaler interne n'a vu que l'entraînement."""
-    X_train, _, X_test, y_train, *_ = split_data(dataset)
+    X_train, _, _, y_train, *_ = split_data(dataset)
     modele = train_model(X_train, y_train, "logistic")
     scaler = modele.named_steps["preprocessing"].named_transformers_["scale"]
 

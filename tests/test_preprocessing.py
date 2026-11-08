@@ -10,6 +10,7 @@ from app.preprocessing import (
     validate_data,
 )
 
+
 @pytest.fixture
 def valid_df():
     """Petit jeu synthétique valide : 5 transactions, 31 colonnes."""

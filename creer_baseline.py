@@ -12,7 +12,13 @@ import sklearn
 
 from app.evaluation import evaluate_model
 from app.prediction import predict_fraud
-from app.training import RANDOM_STATE, load_data, select_threshold, split_data, train_model
+from app.training import (
+    RANDOM_STATE,
+    load_data,
+    select_threshold,
+    split_data,
+    train_model,
+)
 
 CHEMIN_BASELINE = Path("reports/baseline.json")
 CHEMIN_DONNEES = "data/creditcard.csv"
