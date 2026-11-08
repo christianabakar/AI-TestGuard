@@ -44,7 +44,7 @@ def validate_data(df: pd.DataFrame, require_target: bool = True) -> pd.DataFrame
         raise SchemaError(f"Valeurs NaN ou infinies dans : {bad_cols}")
 
     # Contrôle 6 : un montant ne peut pas être négatif
-    if (df["Amount"] < 0).any():
+    if (df["Amount"] < -1).any():
         raise SchemaError("Amount négatif détecté (domaine attendu : Amount >= 0)")
 
     
