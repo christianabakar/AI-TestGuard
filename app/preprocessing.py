@@ -2,6 +2,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 # Contrat de données : les colonnes attendues, dans l'ordre
 FEATURE_COLUMNS = ["Time"] + [f"V{i}" for i in range(1, 29)] + ["Amount"]
@@ -59,4 +60,24 @@ def validate_data(df: pd.DataFrame, require_target: bool = True) -> pd.DataFrame
         warnings.warn(f"Colonnes ignorées : {extra}", UserWarning)
 
     return df[expected].copy()
-    
+
+
+SCALED_COLUMNS = ["Time", "Amount"]
+
+
+def fit_preprocessor(X_train: pd.DataFrame) -> StandardScaler:
+    """Apprend les paramètres de mise à l'échelle, UNIQUEMENT sur l'entraînement."""
+    scaler = StandardScaler()
+    scaler.fit(X_train[SCALED_COLUMNS])
+    return scaler
+
+
+def preprocess_data(X: pd.DataFrame, scaler: StandardScaler) -> pd.DataFrame:
+    """Applique une mise à l'échelle DÉJÀ apprise. Ne réapprend jamais."""
+    result = X[FEATURE_COLUMNS].copy()
+    result[SCALED_COLUMNS] = scaler.transform(X[SCALED_COLUMNS])
+
+    if not np.isfinite(result.to_numpy(dtype=float)).all():
+        raise SchemaError("Le prétraitement a produit des valeurs non finies")
+
+    return result
