@@ -1,0 +1,51 @@
+{
+  "date_creation": "2026-11-08",
+  "version_code": "1120541",
+  "modele": "logistic",
+  "parametres_modele": {
+    "C": "1.0",
+    "class_weight": "None",
+    "dual": "False",
+    "fit_intercept": "True",
+    "intercept_scaling": "1",
+    "l1_ratio": "0.0",
+    "max_iter": "1000",
+    "n_jobs": "None",
+    "penalty": "deprecated",
+    "random_state": "42",
+    "solver": "lbfgs",
+    "tol": "0.0001",
+    "verbose": "0",
+    "warm_start": "False"
+  },
+  "versions_bibliotheques": {
+    "python": "3.14.6",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.1.1",
+    "numpy": "2.5.4"
+  },
+  "graine_aleatoire": 42,
+  "seuil": 0.017720339522953817,
+  "jeu_evaluation": "validation (fixe, graine 42)",
+  "metriques_validation": {
+    "TP": 76.0,
+    "FP": 52.0,
+    "FN": 18.0,
+    "TN": 56599.0,
+    "precision": 0.59375,
+    "recall": 0.8085106382978723,
+    "f1": 0.6846846846846847,
+    "fpr": 0.00091790083140633,
+    "fnr": 0.19148936170212766,
+    "roc_auc": 0.9686341943598675,
+    "pr_auc": 0.6971820765594577,
+    "accuracy": 0.9987664111375452
+  },
+  "donnees": {
+    "sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "lignes_apres_dedoublonnage": 283726,
+    "fraudes_apres_dedoublonnage": 473,
+    "taille_validation": 56745,
+    "fraudes_validation": 94
+  }
+}
