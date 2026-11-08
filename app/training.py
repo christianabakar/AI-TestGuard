@@ -1,6 +1,8 @@
+import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_recall_curve
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -58,3 +60,24 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series, model_name: str) -> P
     pipeline = build_pipeline(model_name)
     pipeline.fit(X_train, y_train)
     return pipeline
+
+
+def select_threshold(y_val, proba_val, min_recall: float = 0.80,
+                     max_fpr: float = 0.005) -> float:
+    """T11 : seuil le plus haut atteignant le rappel minimum, sur la VALIDATION.
+
+    Lève ValueError si ce seuil dépasse le taux de fausses alertes autorisé (ANO-02).
+    """
+    _precision, recall, thresholds = precision_recall_curve(y_val, proba_val)
+    valid = np.where(recall[:-1] >= min_recall)[0]
+    seuil = float(thresholds[valid[-1]])
+
+    y = np.asarray(y_val)
+    alertes = np.asarray(proba_val) >= seuil
+    fpr = (alertes & (y == 0)).sum() / (y == 0).sum()
+    if fpr > max_fpr:
+        raise ValueError(
+            f"Aucun seuil acceptable : rappel >= {min_recall} impose "
+            f"un FPR de {fpr:.2%} (maximum autorisé : {max_fpr:.2%})"
+        )
+    return seuil
