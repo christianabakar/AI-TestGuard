@@ -1,0 +1,38 @@
+{
+  "protocole": {
+    "machine": "Windows 11 | Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "coeurs_cpu": 8,
+    "ram_totale_go": 16.8,
+    "python": "3.14.6",
+    "methode": "time.perf_counter, 50 itérations d'échauffement exclues",
+    "repetitions_latence": 1000,
+    "repetitions_debit": 20,
+    "tailles_de_lot": [
+      1,
+      100,
+      1000,
+      10000
+    ]
+  },
+  "latence_1_transaction_modele_seul": {
+    "moyenne_ms": 3.2074721939861774,
+    "p50_ms": 3.055349923670292,
+    "p95_ms": 3.988944971933958,
+    "p99_ms": 4.744461029767989
+  },
+  "latence_1_transaction_chaine_complete": {
+    "moyenne_ms": 4.774687600322068,
+    "p50_ms": 4.524999996647239,
+    "p95_ms": 6.151359830982982,
+    "p99_ms": 10.161637188866735
+  },
+  "debit_tx_par_seconde": {
+    "1": 212.01262805203635,
+    "100": 12472.404909094643,
+    "1000": 191069.41838382068,
+    "10000": 980339.2876254972
+  },
+  "taille_modele_ko": 3.5,
+  "memoire_chargement_modele_mo": 0.2,
+  "memoire_processus_pic_mo": 252.1
+}
