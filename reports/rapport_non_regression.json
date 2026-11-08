@@ -1,0 +1,51 @@
+{
+  "baseline": "1120541",
+  "candidats": {
+    "v2a : logistique, régularisation plus forte (C = 0,1)": {
+      "decision": "ACCEPTER",
+      "motifs": [],
+      "seuil": 0.017522430599988675,
+      "metriques_validation": {
+        "TP": 76.0,
+        "FP": 47.0,
+        "FN": 18.0,
+        "TN": 56604.0,
+        "precision": 0.6178861788617886,
+        "recall": 0.8085106382978723,
+        "f1": 0.7004608294930875,
+        "fpr": 0.0008296411360787983,
+        "fnr": 0.19148936170212766,
+        "roc_auc": 0.9701259709974885,
+        "pr_auc": 0.6957802585673173,
+        "accuracy": 0.9988545246277205
+      }
+    },
+    "v2b : logistique, classes pondérées (class_weight = balanced)": {
+      "decision": "INVESTIGUER",
+      "motifs": [
+        "precision : -0.340 (tolérance -0.05)"
+      ],
+      "seuil": 0.9250118533338798,
+      "metriques_validation": {
+        "TP": 76.0,
+        "FP": 223.0,
+        "FN": 18.0,
+        "TN": 56428.0,
+        "precision": 0.25418060200668896,
+        "recall": 0.8085106382978723,
+        "f1": 0.38676844783715014,
+        "fpr": 0.003936382411607915,
+        "fnr": 0.19148936170212766,
+        "roc_auc": 0.9710692230179784,
+        "pr_auc": 0.6922247711281122,
+        "accuracy": 0.9957529297735483
+      }
+    },
+    "v2c : arbre de décision (max_depth = 6)": {
+      "decision": "REJETER",
+      "motifs": [
+        "Aucun seuil acceptable : rappel >= 0.8 impose un FPR de 99.89% (maximum autorisé : 0.50%)"
+      ]
+    }
+  }
+}
